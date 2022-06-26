@@ -111,7 +111,7 @@ public class AutocompleteGUI extends JFrame {
 
         // keep these two values in sync! - used to keep the listbox the same
         // width as the textfield
-        private final int DEF_COLUMNS = 30;
+        private final int DEF_COLUMNS = 60;
         private final String suggListLen = "<b>Sleepless in Seattle...</b>";
 
         public AutocompletePanel(String filename) {

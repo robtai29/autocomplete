@@ -1,5 +1,6 @@
 package com.javaproject.autocomplete;
 
+import javax.print.attribute.standard.PrinterMessageFromOperator;
 import java.util.*;
 
 public class TrieAutocomplete implements Autocompletor {
@@ -19,9 +20,6 @@ public class TrieAutocomplete implements Autocompletor {
     private void add(String word, double weight) {
         if (word == null) {
             throw new NullPointerException();
-        }
-        if (weight < 0) {
-            throw new IllegalArgumentException();
         }
 
         Node current = root;
@@ -53,18 +51,43 @@ public class TrieAutocomplete implements Autocompletor {
             if (!current.leaves.containsKey(ch)){
                 return new String[]{};
             }
-
-
-
+            current = current.leaves.get(ch);
         }
 
-        return null;
+        PriorityQueue<Node> pq = new PriorityQueue<>();
+        LinkedList<Node> queue = new LinkedList<>();
+        queue.offer(current);
+
+        while (!queue.isEmpty()){
+            Node node = queue.poll();
+            if (node.weight > 0){
+                pq.add(node);
+            }
+
+                for (char child : node.leaves.keySet()) {
+                    queue.add(node.leaves.get(child));
+                }
+        }
+
+        while (pq.size() > k){
+            pq.poll();
+        }
+
+        //return string array in descending order of weight
+        String[] res = new String[Math.min(k, pq.size())];
+        for (int i = res.length-1; i >=0; i--){
+            res[i] = pq.poll().word;
+        }
+
+        return res;
     }
+
+
 
     /**
      * Used to debugging
      */
-    public double weightOf(String term) {
+    private double weightOf(String term) {
         if (term == null) {
             return 0.0;
         }
@@ -84,7 +107,6 @@ public class TrieAutocomplete implements Autocompletor {
         double weight = -1;
     
         Map<Character, Node> leaves;
-    
         public Node(char character) {
             leaves = new HashMap<Character, Node>();
         }
@@ -93,8 +115,12 @@ public class TrieAutocomplete implements Autocompletor {
         @Override
         public int compareTo(Node other) {
             // Sort in weight ascending && if weight are the same, return lexicographically
-            return weight == this.weight ? (word.compareTo(other.word)) : (int)(weight - other.weight);
+            return weight == other.weight ? (word.compareTo(other.word)) : (int)(weight - other.weight);
+        }
 
+
+        private boolean isLeave(){
+            return leaves.isEmpty();
         }
     }
 }
