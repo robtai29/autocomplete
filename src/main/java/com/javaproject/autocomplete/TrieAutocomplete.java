@@ -122,5 +122,9 @@ public class TrieAutocomplete implements Autocompletor {
         private boolean isLeave(){
             return leaves.isEmpty();
         }
+
+        private boolean isLeave(){
+            return leaves.isEmpty();
+        }
     }
 }
