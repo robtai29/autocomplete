@@ -101,4 +101,7 @@ public  class TrieAutocomplete extends Node  {
         return casingMap.get(word);
 
     }
+
+    // get nodes
+
 }

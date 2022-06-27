@@ -5,6 +5,7 @@ import com.javaproject.autocomplete.TrieAutocomplete;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
