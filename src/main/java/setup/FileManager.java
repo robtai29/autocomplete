@@ -23,13 +23,10 @@ public class FileManager {
     public static void setFile(String filePath) {
         file=new File(filePath);
     }
-    public static TrieAutocomplete scanFile(String filePath,TrieAutocomplete trieAutoInstance) throws IllegalArgumentException, SecurityException,FileNotFoundException {
+    public static void scanFile(String filePath,TrieAutocomplete trieAutoInstance) throws IllegalArgumentException, SecurityException,FileNotFoundException {
         // read in the data
         Scanner in;
         HashMap<String, String> casingMap = new HashMap<String, String> ();
-
-
-
 
         try {
             in = new Scanner(new File(filePath), CHARSET);
@@ -60,7 +57,7 @@ public class FileManager {
                 System.exit(1);
 
             }
-        return trieAutoInstance;
+
 
 
     }

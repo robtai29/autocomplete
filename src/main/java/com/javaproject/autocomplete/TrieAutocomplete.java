@@ -89,7 +89,6 @@ public  class TrieAutocomplete extends Node  {
         for (int i = res.length-1; i >=0; i--){
             res[i] = pq.poll().getWord();
         }
-
         return res;
     }
 

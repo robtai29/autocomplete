@@ -22,7 +22,6 @@ package com.javaproject.autocomplete;
  *
  *************************************************************************/
 
-import setup.FileManager;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -39,15 +38,16 @@ public class AutocompleteGUI extends JFrame {
     private static int DEF_HEIGHT = 400;
     private static String searchURL = "https://www.amazon.com/s?k=";
 
+    // Data structure tree with movie data.
+    private TrieAutocomplete trieAuto;
 
-    TrieAutocomplete trieAuto;
-
-    // display top k results
-    private final int quantityDisplayed;
+    // Display top number of quantityDisplayed results.
+    private int quantityDisplayed;
 
 
-    public AutocompleteGUI(String filePath, int quantityDisplayed) throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
-        this.quantityDisplayed = quantityDisplayed;
+    public AutocompleteGUI(TrieAutocomplete trieAuto, int quantityDisplayed) throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
+        setQuantityDisplayed(quantityDisplayed);
+        setTrieAuto(trieAuto);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Autocomplete");
@@ -57,9 +57,9 @@ public class AutocompleteGUI extends JFrame {
         content.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-        final AutocompletePanel ap = new AutocompletePanel(filePath);
+        final AutocompletePanel ap = new AutocompletePanel();
         JButton searchButton = new JButton("Search on Amazon");
-        // searchButton.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+
         searchButton.addMouseListener(new MouseListener() {
             // Need a bunch of unimplemented reports
             public void mousePressed(MouseEvent e) {
@@ -109,14 +109,10 @@ public class AutocompleteGUI extends JFrame {
         // keep these two values in sync! - used to keep the listbox the same
         // width as the textfield
         private final int DEF_COLUMNS = 60;
-        private final String suggListLen = "<b>Sleepless in Seattle...</b>";
 
-        public AutocompletePanel(String filePath) throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
+
+        public AutocompletePanel() throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
             super();
-
-
-            trieAuto=new TrieAutocomplete(filePath);
-
 
             GroupLayout layout = new GroupLayout(this);
             this.setLayout(layout);
@@ -131,7 +127,6 @@ public class AutocompleteGUI extends JFrame {
                     int pos = searchText.getText().length();
                     searchText.setCaretPosition(pos);
                 }
-
                 public void focusLost(FocusEvent e) {
                 }
             });
@@ -145,7 +140,7 @@ public class AutocompleteGUI extends JFrame {
             suggestions.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             suggestions.setMaximumSize(
                     new Dimension(searchText.getMaximumSize().width, suggestions.getPreferredSize().height));
-            suggestions.setPrototypeCellValue(suggListLen); // set to make equal
+
             // to the width of
             // the
             // textfield
@@ -183,8 +178,6 @@ public class AutocompleteGUI extends JFrame {
                     if (suggestions.getSelectedIndex() == 0) {
                         suggestions.clearSelection();
                         searchText.requestFocusInWindow();
-                        // int pos = searchText.getText().length();
-                        // searchText.select(pos, pos);
                         searchText.setSelectionEnd(0);
 
                     } else if (suggestions.getSelectedIndex() >= 0) {
@@ -246,7 +239,6 @@ public class AutocompleteGUI extends JFrame {
                     getSuggestions(selection);
                     searchOnline(searchText.getText());
                 }
-
             });
             layout.setHorizontalGroup(layout.createSequentialGroup()
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -267,8 +259,7 @@ public class AutocompleteGUI extends JFrame {
          * Makes a call to the implementation of Autocomplete to get suggestions
          * for the currently entered text.
          *
-         * @param text
-         *            string to search for
+         * @param text string to search for
          */
         public void getSuggestions(String text) {
             // text = text.trim();
@@ -320,8 +311,7 @@ public class AutocompleteGUI extends JFrame {
      * selected search engine Opens the default web browser (or a new tab if it
      * is already open)
      *
-     * @param s
-     *            string to search online for
+     * @param s string to search online for
      */
     private void searchOnline(String s) {
         URI searchAddress = null;
@@ -339,5 +329,13 @@ public class AutocompleteGUI extends JFrame {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+    }
+
+    public void setTrieAuto(TrieAutocomplete trieAuto) {
+        this.trieAuto = trieAuto;
+    }
+
+    public void setQuantityDisplayed(int quantityDisplayed) {
+        this.quantityDisplayed = quantityDisplayed;
     }
 }
