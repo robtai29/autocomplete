@@ -22,17 +22,15 @@ package com.javaproject.autocomplete;
  *
  *************************************************************************/
 
+import setup.FileManager;
+
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import javax.swing.*;
-
 import java.util.*;
 
 @SuppressWarnings("serial")
@@ -40,18 +38,17 @@ public class AutocompleteGUI extends JFrame {
     private static int DEF_WIDTH = 600;
     private static int DEF_HEIGHT = 400;
     private static String searchURL = "https://www.amazon.com/s?k=";
-    private HashMap<String, String> casingMap;
 
-    public static final String CHARSET = "UTF-8";
-    public static final Locale LOCALE = Locale.US;
+
+    TrieAutocomplete trieAuto;
 
     // display top k results
-    private final int k;
-    private final String autocompletorClassName;
+    private final int quantityDisplayed;
 
-    public AutocompleteGUI(String fileName, int k, String className) {
-        this.k = k;
-        this.autocompletorClassName = className;
+
+    public AutocompleteGUI(String filePath, int quantityDisplayed) throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
+        this.quantityDisplayed = quantityDisplayed;
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Autocomplete");
         setLocationRelativeTo(null);
@@ -60,7 +57,7 @@ public class AutocompleteGUI extends JFrame {
         content.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-        final AutocompletePanel ap = new AutocompletePanel(fileName);
+        final AutocompletePanel ap = new AutocompletePanel(filePath);
         JButton searchButton = new JButton("Search on Amazon");
         // searchButton.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
         searchButton.addMouseListener(new MouseListener() {
@@ -105,8 +102,8 @@ public class AutocompleteGUI extends JFrame {
 
     private class AutocompletePanel extends JPanel {
         private final JTextField searchText;
-        private Autocompletor auto;
-        private String[] results = new String[k];
+
+        private String[] results = new String[quantityDisplayed];
         private JList<String> suggestions;
 
         // keep these two values in sync! - used to keep the listbox the same
@@ -114,38 +111,12 @@ public class AutocompleteGUI extends JFrame {
         private final int DEF_COLUMNS = 60;
         private final String suggListLen = "<b>Sleepless in Seattle...</b>";
 
-        public AutocompletePanel(String filename) {
+        public AutocompletePanel(String filePath) throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
             super();
 
-            // read in the data
-            Scanner in;
-            try {
-                in = new Scanner(new File(filename), CHARSET);
-                in.useLocale(LOCALE);
-                int N = Integer.parseInt(in.nextLine());
-                String[] terms = new String[N];
-                double[] weights = new double[N];
-                casingMap = new HashMap<String, String>();
-                for (int i = 0; i < N; i++) {
-                    String line = in.nextLine();
-                    int tab = line.indexOf('\t');
-                    weights[i] = Double.parseDouble(line.substring(0, tab).trim());
-                    casingMap.put(line.substring(tab + 1).toLowerCase(), line.substring(tab + 1));
-                    terms[i] = line.substring(tab + 1).toLowerCase();
-                    // create the autocomplete object
-                }
-                auto = (Autocompletor) Class.forName(autocompletorClassName)
-                        .getDeclaredConstructor(String[].class, double[].class).newInstance(terms, weights);
 
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IllegalArgumentException
-                     | InvocationTargetException | NoSuchMethodException | SecurityException e1) {
-                e1.printStackTrace();
-                System.exit(1);
-            } catch (FileNotFoundException e2) {
-                System.out.println("Cannot read file " + filename);
-                System.exit(1);
+            trieAuto=new TrieAutocomplete(filePath);
 
-            }
 
             GroupLayout layout = new GroupLayout(this);
             this.setLayout(layout);
@@ -307,8 +278,8 @@ public class AutocompleteGUI extends JFrame {
             } else {
                 int textLen = text.length();
                 Queue<String> resultQ = new LinkedList<String>();
-                for (String term : auto.topKMatches(text.toLowerCase(), k)) {
-                    resultQ.add(casingMap.get(term));
+                for (String term : trieAuto.topKMatches(text.toLowerCase(), quantityDisplayed)) {
+                    resultQ.add(trieAuto.getCasing(term));
                 }
                 if (!resultQ.isEmpty()) {
                     results = new String[resultQ.size()];
