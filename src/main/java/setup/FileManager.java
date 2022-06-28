@@ -44,10 +44,17 @@ public class FileManager {
                 terms[i] = line.substring(tab + 1).toLowerCase();
                 // create the autocomplete object
             }
-
+            System.out.println(47);
+//            System.out.println(Arrays.toString(terms));
+//            System.out.println(Arrays.toString(weights));
+             for (int i=0; i < N; i++) {
+                 System.out.println("term: " + terms[i] + "\t weights: " + weights[i] + "\t i: " + i);
+             }
+            System.out.println(Arrays.toString(weights));
             trieAutoInstance.setNodes(terms, weights);
+            System.out.println(49);
             trieAutoInstance.setCasingMap(casingMap);
-
+            System.out.println(50);
 
             } catch (IllegalArgumentException
                      | SecurityException e1) {

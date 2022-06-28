@@ -3,7 +3,7 @@ package com.javaproject.autocomplete;
 import java.io.FileNotFoundException;
 import java.util.*;
 import setup.FileManager;
-public  class TrieAutocomplete extends Node  {
+public class TrieAutocomplete {
     private  Node root;
 
     private static HashMap<String, String> casingMap=new HashMap<String,String>();
@@ -12,6 +12,7 @@ public  class TrieAutocomplete extends Node  {
     TrieAutocomplete(String filePath) throws FileNotFoundException {
         this.root =  new Node('\0');
         FileManager.setFile(filePath);
+        // TODO: FIX BELOW
         FileManager.scanFile(filePath,this);
     }
 
