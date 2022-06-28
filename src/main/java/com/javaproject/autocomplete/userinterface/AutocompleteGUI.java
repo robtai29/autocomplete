@@ -1,4 +1,4 @@
-package com.javaproject.autocomplete;
+package com.javaproject.autocomplete.userinterface;
 /*************************************************************************
  * @author Matthew Drabick, adapted by Austin Lu for COMPSCI 201 Autocomplete,
  *
@@ -22,6 +22,8 @@ package com.javaproject.autocomplete;
  *
  *************************************************************************/
 
+
+import com.javaproject.autocomplete.suggestionobject.TrieAutocomplete;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -101,14 +103,15 @@ public class AutocompleteGUI extends JFrame {
     }
 
     private class AutocompletePanel extends JPanel {
-        private final JTextField searchText;
-
-        private String[] results = new String[quantityDisplayed];
-        private JList<String> suggestions;
 
         // keep these two values in sync! - used to keep the listbox the same
         // width as the textfield
         private final int DEF_COLUMNS = 60;
+
+        private final JTextField searchText;
+
+        private String[] results = new String[quantityDisplayed];
+        private JList<String> suggestions;
 
 
         public AutocompletePanel() throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
@@ -127,6 +130,7 @@ public class AutocompleteGUI extends JFrame {
                     int pos = searchText.getText().length();
                     searchText.setCaretPosition(pos);
                 }
+
                 public void focusLost(FocusEvent e) {
                 }
             });

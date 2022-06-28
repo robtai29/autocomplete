@@ -1,4 +1,4 @@
-package com.javaproject.autocomplete;
+package com.javaproject.autocomplete.suggestionobject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,32 +6,25 @@ import java.util.Map;
 
 public class Node implements Comparable<Node> {
 
-    private String word = "";
+    private String character = "";
     private double weight = -1;
 
     private Map<Character, Node> leaves;
 
-    public Node() {
-    }
 
-    public Node(char character) {
+    public Node() {
         leaves = new HashMap<Character, Node>();
-    }
-    @Override
-    public int compareTo(Node other) {
-        // Sort in weight ascending && if weight are the same, return lexicographically
-        return weight == other.weight ? (word.compareTo(other.word)) : (int) (weight - other.weight);
     }
 
 
     public String getWord() {
 
-        return word;
+        return character;
     }
 
     public void setWord(String word) {
 
-        this.word = word;
+        this.character = word;
     }
 
     public double getWeight() {
@@ -49,6 +42,11 @@ public class Node implements Comparable<Node> {
         return leaves;
     }
 
+    @Override
+    public int compareTo(Node other) {
+        // Sort in weight ascending && if weight are the same, return lexicographically
+        return weight == other.weight ? (character.compareTo(other.character)) : (int) (weight - other.weight);
+    }
 
 }
 
