@@ -13,7 +13,7 @@ public class TrieAutocomplete {
         this.root =  new Node('\0');
         FileManager.setFile(filePath);
         // TODO: FIX BELOW
-        FileManager.scanFile(filePath,this);
+        FileManager.scanFile(this);
     }
 
     public void setNodes (String[] terms, double[] weights) {
