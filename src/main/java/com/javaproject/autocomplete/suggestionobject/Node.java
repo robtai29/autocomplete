@@ -45,7 +45,7 @@ public class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node other) {
         // Sort in weight ascending && if weight are the same, return lexicographically
-        return weight == other.weight ? (character.compareTo(other.character)) : (int) (weight - other.weight);
+        return weight == other.weight ? (other.character.compareTo(character)) : (int) (weight - other.weight);
     }
 
 }

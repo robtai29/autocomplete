@@ -4,7 +4,7 @@ import com.javaproject.autocomplete.suggestionobject.TrieAutocomplete;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -19,12 +19,12 @@ public class FileManager {
     public static void setFile(String filePath) {
         file=new File(filePath);
     }
-    public static void scanFile(TrieAutocomplete trieAutoInstance) throws IllegalArgumentException, SecurityException,FileNotFoundException {
+    public static void scanFile(TrieAutocomplete trieAutoInstance) throws FileNotFoundException {
         // read in the data
         Scanner in;
         HashMap<String, String> casingMap = new HashMap<String, String> ();
 
-        try {
+
             in = new Scanner(file, CHARSET);
 
             int N = Integer.parseInt(in.nextLine());
@@ -45,15 +45,8 @@ public class FileManager {
             trieAutoInstance.setCasingMap(casingMap);
 
 
-            } catch (IllegalArgumentException
-                     | SecurityException e1) {
-                e1.printStackTrace();
-                System.exit(1);
-            } catch (FileNotFoundException e2) {
-                System.out.println("Cannot read file " + file.getPath());
-                System.exit(1);
 
-            }
+
 
     }
 }
