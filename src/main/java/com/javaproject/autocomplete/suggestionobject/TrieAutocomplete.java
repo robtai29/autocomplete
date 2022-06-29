@@ -1,23 +1,29 @@
 package com.javaproject.autocomplete.suggestionobject;
 
-import java.io.FileNotFoundException;
-import java.util.*;
-
-import com.javaproject.autocomplete.userinterface.AutocompleteGUI;
 import com.javaproject.autocomplete.setup.FileManager;
+import com.javaproject.autocomplete.userinterface.AutocompleteGUI;
 
 import javax.swing.*;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
 
-public class TrieAutocomplete extends Node {
+
+/**
+ * TrieAutocomplete Class contains Node and Node Tree manipulation Methods
+ */
+public class TrieAutocomplete {
+
+
     private static Node root;
 
     private static HashMap<String, String> casingMap = new HashMap<String, String>();
 
 
-   public TrieAutocomplete(String filePath) throws FileNotFoundException {
-        this.root = new Node();
-        FileManager.setFile(filePath);
-        FileManager.scanFile(this);
+    public TrieAutocomplete(String filePath) throws FileNotFoundException {
+        root=new Node();
+        FileManager filemanager =new FileManager(filePath, this);
     }
 
     public void setNodes(String[] terms, double[] weights) {
@@ -33,6 +39,7 @@ public class TrieAutocomplete extends Node {
     }
 
     private void add(String word, double weight) {
+
         if (word == null) {
             throw new NullPointerException();
         }
@@ -97,7 +104,7 @@ public class TrieAutocomplete extends Node {
     }
 
     public void setCasingMap(HashMap<String, String> casingMap) {
-        this.casingMap = casingMap;
+        TrieAutocomplete.casingMap = casingMap;
     }
 
     public String getCasing(String word) {
@@ -110,7 +117,7 @@ public class TrieAutocomplete extends Node {
         /**
          * Invoke runnable to initiate GUI user interface.
          */
-        TrieAutocomplete trieAuto=this;
+        TrieAutocomplete trieAuto = this;
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {

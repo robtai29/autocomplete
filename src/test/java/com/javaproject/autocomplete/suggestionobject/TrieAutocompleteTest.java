@@ -1,11 +1,13 @@
 package com.javaproject.autocomplete.suggestionobject;
 
-import com.javaproject.autocomplete.suggestionobject.TrieAutocomplete;
+
 import org.junit.jupiter.api.Test;
+
 import java.io.FileNotFoundException;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TrieAutocompleteTest {
     private static final String FILE_PATH = "src/test/resources/movies.txt";

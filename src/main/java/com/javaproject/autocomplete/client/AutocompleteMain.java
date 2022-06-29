@@ -1,14 +1,14 @@
 package com.javaproject.autocomplete.client;
 
 import com.javaproject.autocomplete.suggestionobject.TrieAutocomplete;
-import com.javaproject.autocomplete.suggestionobject.TrieAutocomplete;
 
 import java.io.FileNotFoundException;
 
 /**
- * Main class for Autocomplete program.
- * The user inputs text and application suggests movies based on input
- * Once the movie title is selected, Amazon with searched movie title opens in Browser.
+ * AutocompleteMain contains main method for Autocomplete program.
+ * The application opens a user Interface and suggests movies based on users input
+ * Once the movie title is selected, browser opens with Amazon Prime Video
+ * With the selected movie.
  *
  * @author Robert Tai
  * @author James Northup
@@ -21,10 +21,6 @@ public class AutocompleteMain {
 
     /* Movie data source path*/
     private final static String MOVIE_DATA_TEXT_PATH = "src/main/resources/movies.txt";
-    /*
-     *Instance trieAuto contains movie data structure.
-     */
-    private static TrieAutocomplete trieAuto;
 
     /**
      * Main method generates data tree and invokes GUI.
@@ -32,13 +28,12 @@ public class AutocompleteMain {
      * @param args
      * @throws FileNotFoundException
      */
-    public static void main(String[] args) throws FileNotFoundException {
 
+    public static void main(String[] args) throws FileNotFoundException {
 
         // Generate Data structure from movie text file.
         TrieAutocomplete trieAuto = new TrieAutocomplete(MOVIE_DATA_TEXT_PATH);
         trieAuto.invokeUserInterface(QUANTITY_DISPLAY_TYPE);
-
 
     }
 }

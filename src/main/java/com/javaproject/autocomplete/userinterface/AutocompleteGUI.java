@@ -25,20 +25,21 @@ package com.javaproject.autocomplete.userinterface;
 
 import com.javaproject.autocomplete.suggestionobject.TrieAutocomplete;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.swing.*;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
 @SuppressWarnings("serial")
 public class AutocompleteGUI extends JFrame {
-    private static int DEF_WIDTH = 600;
-    private static int DEF_HEIGHT = 400;
-    private static String searchURL = "https://www.amazon.com/s?k=";
+    private static final int DEF_WIDTH = 600;
+    private static final int DEF_HEIGHT = 400;
+    private static final String searchURL = "https://www.amazon.com/s?k=";
 
     // Data structure tree with movie data.
     private TrieAutocomplete trieAuto;
@@ -102,6 +103,39 @@ public class AutocompleteGUI extends JFrame {
         pack();
     }
 
+    /**
+     * Creates a URI from the user-defined string and searches the web with the
+     * selected search engine Opens the default web browser (or a new tab if it
+     * is already open)
+     *
+     * @param s string to search online for
+     */
+    private void searchOnline(String s) {
+        URI searchAddress = null;
+        try {
+            URI tempAddress = new URI(searchURL + s.trim().replace(' ', '+'));
+            searchAddress = new URI(tempAddress.toASCIIString()); // hack to
+            // handle
+            // Unicode
+        } catch (URISyntaxException e2) {
+            e2.printStackTrace();
+            return;
+        }
+        try {
+            Desktop.getDesktop().browse(searchAddress);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    public void setTrieAuto(TrieAutocomplete trieAuto) {
+        this.trieAuto = trieAuto;
+    }
+
+    public void setQuantityDisplayed(int quantityDisplayed) {
+        this.quantityDisplayed = quantityDisplayed;
+    }
+
     private class AutocompletePanel extends JPanel {
 
         // keep these two values in sync! - used to keep the listbox the same
@@ -109,9 +143,8 @@ public class AutocompleteGUI extends JFrame {
         private final int DEF_COLUMNS = 60;
 
         private final JTextField searchText;
-
+        private final JList<String> suggestions;
         private String[] results = new String[quantityDisplayed];
-        private JList<String> suggestions;
 
 
         public AutocompletePanel() throws ClassNotFoundException, NoSuchMethodException, FileNotFoundException {
@@ -152,7 +185,7 @@ public class AutocompleteGUI extends JFrame {
             Action makeSelection = new AbstractAction() {
                 public void actionPerformed(ActionEvent e) {
                     if (!suggestions.isSelectionEmpty()) {
-                        String selection = (String) suggestions.getSelectedValue();
+                        String selection = suggestions.getSelectedValue();
                         selection = selection.replaceAll("\\<.*?>", "");
                         searchText.setText(selection);
                         getSuggestions(selection);
@@ -298,7 +331,7 @@ public class AutocompleteGUI extends JFrame {
 
         public String getSelectedText() {
             if (!suggestions.isSelectionEmpty()) {
-                String selection = (String) suggestions.getSelectedValue();
+                String selection = suggestions.getSelectedValue();
                 selection = selection.replaceAll("\\<.*?>", "");
                 return selection;
             } else
@@ -308,38 +341,5 @@ public class AutocompleteGUI extends JFrame {
         public String getSearchText() {
             return searchText.getText();
         }
-    }
-
-    /**
-     * Creates a URI from the user-defined string and searches the web with the
-     * selected search engine Opens the default web browser (or a new tab if it
-     * is already open)
-     *
-     * @param s string to search online for
-     */
-    private void searchOnline(String s) {
-        URI searchAddress = null;
-        try {
-            URI tempAddress = new URI(searchURL + s.trim().replace(' ', '+'));
-            searchAddress = new URI(tempAddress.toASCIIString()); // hack to
-            // handle
-            // Unicode
-        } catch (URISyntaxException e2) {
-            e2.printStackTrace();
-            return;
-        }
-        try {
-            Desktop.getDesktop().browse(searchAddress);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
-
-    public void setTrieAuto(TrieAutocomplete trieAuto) {
-        this.trieAuto = trieAuto;
-    }
-
-    public void setQuantityDisplayed(int quantityDisplayed) {
-        this.quantityDisplayed = quantityDisplayed;
     }
 }
