@@ -30,11 +30,9 @@ public class AutocompleteMain {
      */
 
     public static void main(String[] args) throws FileNotFoundException {
-
         // Generate Data structure from movie text file.
         TrieAutocomplete trieAuto = new TrieAutocomplete(MOVIE_DATA_TEXT_PATH);
         trieAuto.invokeUserInterface(QUANTITY_DISPLAY_TYPE);
-
     }
 }
 
