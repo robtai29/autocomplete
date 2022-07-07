@@ -1,3 +1,4 @@
 # AUTOCOMPLETE
 
-Project based on UW CSE 332 Autocomplete program
+See project specification
+https://coursework.cs.duke.edu/201-public-documentation/p5-autocomplete/-/blob/main/README.md
